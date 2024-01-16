@@ -1,5 +1,6 @@
 package io.spring.api;
 
+import org.springframework.web.bind.annotation.PostMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -36,7 +37,7 @@ public class UsersApi {
   private JwtService jwtService;
   private UserService userService;
 
-  @RequestMapping(path = "/users", method = POST)
+  @PostMapping(path = "/users")
   public ResponseEntity createUser(@Valid @RequestBody RegisterParam registerParam) {
     User user = userService.createUser(registerParam);
     UserData userData = userQueryService.findById(user.getId()).get();
@@ -44,7 +45,7 @@ public class UsersApi {
         .body(userResponse(new UserWithToken(userData, jwtService.toToken(user))));
   }
 
-  @RequestMapping(path = "/users/login", method = POST)
+  @PostMapping(path = "/users/login")
   public ResponseEntity userLogin(@Valid @RequestBody LoginParam loginParam) {
     Optional<User> optional = userRepository.findByEmail(loginParam.getEmail());
     if (optional.isPresent()
